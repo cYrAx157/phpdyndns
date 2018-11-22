@@ -11,6 +11,7 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
     header('HTTP/1.0 401 Unauthorized');
     echo '401 ERROR (No authorization informationen provided !';
     exit;
+}
 
 $dns_server = 'localhost';
 $ddns_fqdn = 'ddns.cyraxnet.de';
@@ -35,7 +36,7 @@ $updatecmd_v4 = <<<EOF
     exit
 EOF;
 
-$updatecmd_v6 =  <<<EOF
+$updatecmd_v6 = <<<EOF
     server $dns_server
     zone $zone
     update delete $zone. AAAA
