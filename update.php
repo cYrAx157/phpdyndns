@@ -16,6 +16,7 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
 $dns_server = '127.0.0.1';
 $ddns_fqdn = 'ddns.cyraxnet.de';
 $subdomain = $_SERVER['PHP_AUTH_USER'];
+$update_key = '/etc/named/ddns-key.ddns.cyraxnet.de.conf';
 $ttl = '86400';
 
 $zone = $subdomain . '.' . $ddns_fqdn;
@@ -34,7 +35,7 @@ if($curip_v4 == $newip_v4 && $curip_v6 == $newip_v6) {
   exit;
 }
 
-$nsupdate = popen("/usr/bin/nsupdate -k /etc/named/ddns-key.ddns.cyraxnet.de.conf", "w");
+$nsupdate = popen("/usr/bin/nsupdate -k $update_key", "w");
 fwrite($nsupdate, "server ".$dns_server."\n");
 fwrite($nsupdate, "zone ".$ddns_fqdn.".\n");  
 
