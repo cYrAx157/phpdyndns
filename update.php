@@ -36,23 +36,26 @@ if($curip_v4 == $newip_v4 && $curip_v6 == $newip_v6) {
 
 $nsupdate = popen("/usr/bin/nsupdate -k /etc/named/ddns-key.ddns.cyraxnet.de.conf", "w");
 fwrite($nsupdate, "server ".$dns_server."\n");
-fwrite($nsupdate, "zone ".$zone."\n");  
+fwrite($nsupdate, "zone ".$ddns_fqdn.".\n");  
 
     if($curip_v4 != $newip_v4) { 
-        print "Updating A-Record (IPv4) on Zone $zone (Old-IP: $curip_v4 -> New-IP $newip_v4)";
-        fwrite($nsupdate, "update delete ".$zone.".A\n");
+        print "Updating A-Record (IPv4) on Zone $zone (Old-IP: $curip_v4 -> New-IP $newip_v4)<br>";
+        fwrite($nsupdate, "update delete ".$zone.". A\n");
         fwrite($nsupdate, "update add ".$zone.". ".$ttl." A ".$newip_v4."\n");   
     }
+  if (isset($newip_v6)) {
     if($curip_v6 != $newip_v6) { 
-        print "Updating AAAA-Record (IPv6) on Zone $zone (Old-IP: $curip_v6 -> New-IP $newip_v6)";
-        fwrite($nsupdate, "update delete ".$zone.".AAAA\n");
-        fwrite($nsupdate, "update add ".$zone.". ".$ttl." AAAAA ".$newip_v6."\n");   
+        print "Updating AAAA-Record (IPv6) on Zone $zone (Old-IP: $curip_v6 -> New-IP $newip_v6)<br>";
+        fwrite($nsupdate, "update delete ".$zone.". AAAA\n");
+        fwrite($nsupdate, "update add ".$zone.". ".$ttl." AAAA ".$newip_v6."\n");   
+  }
     }
-    
+
 fwrite($nsupdate, "send\n");
 fwrite($nsupdate, "quit\n");
-echo 'Update done';
+echo '200 Update OK';
 pclose($nsupdate);
+return 0;
 
 // print "IPv4-Update - Return code = " . $retval . "\n";
 
